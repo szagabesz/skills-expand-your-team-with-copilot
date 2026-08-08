@@ -50,6 +50,32 @@ body {
   font-size: 0.9rem;
 }
 
+body.dark-mode {
+  --primary: #8ea6ff;
+  --primary-light: #b4c4ff;
+  --primary-dark: #6f89f2;
+  --primary-text: #10121a;
+  --secondary: #ffb74d;
+  --secondary-light: #ffd389;
+  --secondary-dark: #f2992e;
+  --secondary-text: #10121a;
+  --background: #12151f;
+  --surface: #1c2130;
+  --text-primary: #e6ecff;
+  --text-secondary: #bac4e1;
+  --border: #313a52;
+  --border-light: #252d41;
+  --border-focus: #52618a;
+  --success: #81c784;
+  --success-light: #203827;
+  --warning: #ffb74d;
+  --warning-light: #3b2f1a;
+  --error: #ef9a9a;
+  --error-light: #3b2428;
+  --info: #80deea;
+  --info-light: #1d3540;
+}
+
 header {
   text-align: center;
   padding: 12px 0;
@@ -619,6 +645,9 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #user-status {
