@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchButton = document.getElementById("search-button");
   const categoryFilters = document.querySelectorAll(".category-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
 
   // Authentication elements
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentFilter = "all";
   let searchQuery = "";
   let currentDay = "";
+  let currentDifficulty = "";
   let currentTimeRange = "";
 
   // Authentication state
@@ -63,6 +65,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeTimeFilter = document.querySelector(".time-filter.active");
     if (activeTimeFilter) {
       currentTimeRange = activeTimeFilter.dataset.time;
+    }
+
+    // Initialize difficulty filter
+    const activeDifficultyFilter = document.querySelector(
+      ".difficulty-filter.active"
+    );
+    if (activeDifficultyFilter) {
+      currentDifficulty = activeDifficultyFilter.dataset.difficulty;
     }
   }
 
@@ -89,6 +99,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update active class
     timeFilters.forEach((btn) => {
       if (btn.dataset.time === timeRange) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    fetchActivities();
+  }
+
+  // Function to set difficulty filter
+  function setDifficultyFilter(difficulty) {
+    currentDifficulty = difficulty;
+
+    // Update active class
+    difficultyFilters.forEach((btn) => {
+      if (btn.dataset.difficulty === difficulty) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
@@ -392,6 +418,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // Handle difficulty filter
+      if (currentDifficulty) {
+        queryParams.push(`difficulty=${encodeURIComponent(currentDifficulty)}`);
+      }
+
       const queryString =
         queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
       const response = await fetch(`/activities${queryString}`);
@@ -506,6 +537,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </span>
     `;
 
+    const difficultyHtml = details.difficulty
+      ? `<p class="difficulty-label"><strong>Difficulty:</strong> ${details.difficulty}</p>`
+      : "";
+
     // Create capacity indicator
     const capacityIndicator = `
       <div class="capacity-container ${capacityStatusClass}">
@@ -523,6 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ${tagHtml}
       <h4>${name}</h4>
       <p>${details.description}</p>
+      ${difficultyHtml}
       <p class="tooltip">
         <strong>Schedule:</strong> ${formattedSchedule}
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
@@ -662,6 +698,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update current day filter and fetch activities
       currentDay = button.dataset.day;
       fetchActivities();
+    });
+  });
+
+  // Add event listeners to difficulty filter buttons
+  difficultyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      setDifficultyFilter(button.dataset.difficulty);
     });
   });
 
@@ -895,6 +938,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Expose filter functions to window for future UI control
   window.activityFilters = {
     setDayFilter,
+    setDifficultyFilter,
     setTimeRangeFilter,
   };
 

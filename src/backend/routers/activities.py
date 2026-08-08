@@ -18,7 +18,8 @@ router = APIRouter(
 def get_activities(
     day: Optional[str] = None,
     start_time: Optional[str] = None,
-    end_time: Optional[str] = None
+    end_time: Optional[str] = None,
+    difficulty: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Get all activities with their details, with optional filtering by day and time
@@ -26,6 +27,8 @@ def get_activities(
     - day: Filter activities occurring on this day (e.g., 'Monday', 'Tuesday')
     - start_time: Filter activities starting at or after this time (24-hour format, e.g., '14:30')
     - end_time: Filter activities ending at or before this time (24-hour format, e.g., '17:00')
+    - difficulty: Filter activities by level ('Beginner', 'Intermediate', 'Advanced').
+      Use 'all' to return only activities without difficulty information.
     """
     # Build the query based on provided filters
     query = {}
@@ -38,6 +41,19 @@ def get_activities(
     
     if end_time:
         query["schedule_details.end_time"] = {"$lte": end_time}
+
+    if difficulty:
+        normalized_difficulty = difficulty.strip().lower()
+        if normalized_difficulty == "all":
+            query["$or"] = [
+                {"difficulty": {"$exists": False}},
+                {"difficulty": None}
+            ]
+        else:
+            valid_difficulties = {"beginner", "intermediate", "advanced"}
+            if normalized_difficulty not in valid_difficulties:
+                raise HTTPException(status_code=400, detail="Invalid difficulty level")
+            query["difficulty"] = normalized_difficulty.capitalize()
     
     # Query the database
     activities = {}
