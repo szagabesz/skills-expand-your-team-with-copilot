@@ -568,6 +568,12 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        <div class="share-buttons">
+          <span class="share-label">Share:</span>
+          <button class="share-btn share-twitter" data-activity="${name}" title="Share on Twitter/X" aria-label="Share on Twitter/X">𝕏</button>
+          <button class="share-btn share-whatsapp" data-activity="${name}" title="Share on WhatsApp" aria-label="Share on WhatsApp">📱</button>
+          <button class="share-btn share-copy" data-activity="${name}" title="Copy link" aria-label="Copy link">🔗</button>
+        </div>
       </div>
     `;
 
@@ -586,6 +592,37 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add event listeners for share buttons
+    const shareUrl = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(name)}`;
+    const shareText = `Check out "${name}" at Mergington High School: ${details.description}`;
+
+    const twitterBtn = activityCard.querySelector(".share-twitter");
+    twitterBtn.addEventListener("click", () => {
+      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+
+    const whatsappBtn = activityCard.querySelector(".share-whatsapp");
+    whatsappBtn.addEventListener("click", () => {
+      const url = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+
+    const copyBtn = activityCard.querySelector(".share-copy");
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const original = copyBtn.textContent;
+        copyBtn.textContent = "✓";
+        copyBtn.classList.add("copied");
+        setTimeout(() => {
+          copyBtn.textContent = original;
+          copyBtn.classList.remove("copied");
+        }, 2000);
+      }).catch(() => {
+        showMessage("Failed to copy link.", "error");
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
