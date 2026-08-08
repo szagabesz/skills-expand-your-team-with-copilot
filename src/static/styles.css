@@ -187,7 +187,9 @@ section h3 {
   margin-top: auto;
   padding-top: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Activity Tag */
@@ -663,4 +665,42 @@ footer {
 
 #logout-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Social sharing buttons */
+.share-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.share-btn {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.share-btn:hover {
+  background-color: var(--border);
+  border-color: var(--text-secondary);
+}
+
+.share-btn.copied {
+  background-color: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
 }
